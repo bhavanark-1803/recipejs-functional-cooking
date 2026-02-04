@@ -1,128 +1,143 @@
-// ===============================
-// Step 3.1: Recipe Data Array
-// ===============================
-
-// Recipe data - Foundation for all 4 parts
+// ================================
+// Recipe Data
+// ================================
 const recipes = [
-  {
-    id: 1,
-    title: "Classic Spaghetti Carbonara",
-    time: 25,
-    difficulty: "easy",
-    description:
-      "A creamy Italian pasta dish made with eggs, cheese, pancetta, and black pepper.",
-    category: "pasta",
-  },
-  {
-    id: 2,
-    title: "Chicken Tikka Masala",
-    time: 45,
-    difficulty: "medium",
-    description: "Tender chicken pieces in a creamy, spiced tomato sauce.",
-    category: "curry",
-  },
-  {
-    id: 3,
-    title: "Homemade Croissants",
-    time: 180,
-    difficulty: "hard",
-    description:
-      "Buttery, flaky French pastries that require patience but deliver amazing results.",
-    category: "baking",
-  },
-  {
-    id: 4,
-    title: "Greek Salad",
-    time: 15,
-    difficulty: "easy",
-    description:
-      "Fresh vegetables, feta cheese, and olives tossed in olive oil and herbs.",
-    category: "salad",
-  },
-  {
-    id: 5,
-    title: "Beef Wellington",
-    time: 120,
-    difficulty: "hard",
-    description:
-      "Tender beef fillet coated with mushroom duxelles and wrapped in puff pastry.",
-    category: "meat",
-  },
-  {
-    id: 6,
-    title: "Vegetable Stir Fry",
-    time: 20,
-    difficulty: "easy",
-    description: "Colorful mixed vegetables cooked quickly in a savory sauce.",
-    category: "vegetarian",
-  },
-  {
-    id: 7,
-    title: "Pad Thai",
-    time: 30,
-    difficulty: "medium",
-    description:
-      "Thai stir-fried rice noodles with shrimp, peanuts, and tangy tamarind sauce.",
-    category: "noodles",
-  },
-  {
-    id: 8,
-    title: "Margherita Pizza",
-    time: 60,
-    difficulty: "medium",
-    description:
-      "Classic Italian pizza with fresh mozzarella, tomatoes, and basil.",
-    category: "pizza",
-  },
+    {
+        id: 1,
+        title: "Classic Spaghetti Carbonara",
+        time: 25,
+        difficulty: "easy",
+        description: "A creamy Italian pasta dish made with eggs, cheese, pancetta, and black pepper.",
+        category: "pasta",
+    },
+    {
+        id: 2,
+        title: "Chicken Tikka Masala",
+        time: 45,
+        difficulty: "medium",
+        description: "Tender chicken pieces in a creamy, spiced tomato sauce.",
+        category: "curry",
+    },
+    {
+        id: 3,
+        title: "Homemade Croissants",
+        time: 180,
+        difficulty: "hard",
+        description: "Buttery, flaky French pastries that require patience but deliver amazing results.",
+        category: "baking",
+    },
+    {
+        id: 4,
+        title: "Greek Salad",
+        time: 15,
+        difficulty: "easy",
+        description: "Fresh vegetables, feta cheese, and olives tossed in olive oil and herbs.",
+        category: "salad",
+    },
+    {
+        id: 5,
+        title: "Beef Wellington",
+        time: 120,
+        difficulty: "hard",
+        description: "Tender beef fillet coated with mushroom duxelles and wrapped in puff pastry.",
+        category: "meat",
+    },
+    {
+        id: 6,
+        title: "Vegetable Stir Fry",
+        time: 20,
+        difficulty: "easy",
+        description: "Colorful mixed vegetables cooked quickly in a savory sauce.",
+        category: "vegetarian",
+    },
+    {
+        id: 7,
+        title: "Pad Thai",
+        time: 30,
+        difficulty: "medium",
+        description: "Thai stir-fried rice noodles with shrimp, peanuts, and tangy tamarind sauce.",
+        category: "noodles",
+    },
+    {
+        id: 8,
+        title: "Margherita Pizza",
+        time: 60,
+        difficulty: "medium",
+        description: "Classic Italian pizza with fresh mozzarella, tomatoes, and basil.",
+        category: "pizza",
+    },
 ];
 
-// ===============================
-// Step 4.1: DOM Selection
-// ===============================
+// ================================
+// State
+// ================================
+let currentFilter = 'all';
+let currentSort = null;
 
-// DOM Selection - Get the container where recipes will be displayed
-const recipeContainer = document.querySelector("#recipe-container");
+// ================================
+// DOM
+// ================================
+const recipeContainer = document.querySelector('#recipe-container');
+const controls = document.querySelector('.controls');
 
-// Test
-console.log(recipeContainer);
-
-// ===============================
-// Step 4.2: Recipe Card Generator
-// ===============================
-
-// Function to create HTML for a single recipe card
-const createRecipeCard = (recipe) => {
-  return `
-        <div class="recipe-card" data-id="${recipe.id}">
-            <h3>${recipe.title}</h3>
-            <div class="recipe-meta">
-                <span>⏱️ ${recipe.time} min</span>
-                <span class="difficulty ${recipe.difficulty}">
-                    ${recipe.difficulty}
-                </span>
-            </div>
-            <p>${recipe.description}</p>
+// ================================
+// Pure Functions
+// ================================
+const createRecipeCard = (recipe) => `
+    <div class="recipe-card">
+        <h3>${recipe.title}</h3>
+        <div class="recipe-meta">
+            <span>⏱️ ${recipe.time} min</span>
+            <span class="difficulty ${recipe.difficulty}">
+                ${recipe.difficulty}
+            </span>
         </div>
-    `;
+        <p>${recipe.description}</p>
+    </div>
+`;
+
+const filterRecipes = (recipes, filter) => {
+    if (filter === 'quick') return recipes.filter(r => r.time < 30);
+    if (['easy','medium','hard'].includes(filter))
+        return recipes.filter(r => r.difficulty === filter);
+    return recipes;
 };
 
-// Test
-console.log(createRecipeCard(recipes[0]));
+const sortRecipes = (recipes, sortType) => {
+    const copy = [...recipes];
+    if (sortType === 'name')
+        return copy.sort((a, b) => a.title.localeCompare(b.title));
+    if (sortType === 'time')
+        return copy.sort((a, b) => a.time - b.time);
+    return copy;
+};
 
-// ===============================
-// Step 4.3: Render Function
-// ===============================
-
-// Function to render recipes to the DOM
 const renderRecipes = (recipesToRender) => {
-  const recipeCardsHTML = recipesToRender.map(createRecipeCard).join("");
-
-  recipeContainer.innerHTML = recipeCardsHTML;
+    recipeContainer.innerHTML = recipesToRender
+        .map(createRecipeCard)
+        .join('');
 };
 
-// ===============================
-// Step 4.4: Initialize App
-// ===============================
+const updateDisplay = () => {
+    const filtered = filterRecipes(recipes, currentFilter);
+    const sorted = sortRecipes(filtered, currentSort);
+    renderRecipes(sorted);
+};
 
-// Initialize: Render all recipes when page loads
-renderRecipes(recipes);
+// ================================
+// Events
+// ================================
+controls.addEventListener('click', (e) => {
+    if (e.target.dataset.filter) {
+        currentFilter = e.target.dataset.filter;
+    }
+    if (e.target.dataset.sort) {
+        currentSort = e.target.dataset.sort;
+    }
+    updateDisplay();
+});
+
+// ================================
+// Init
+// ================================
+updateDisplay();
