@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeJS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>🍳 RecipeJS</h1>
+    <p>Your Functional Cooking Companion</p>
+</header>
+
+<main>
+    <!-- Search -->
+    <input
+        type="text"
+        id="search"
+        placeholder="Search recipes..."
+    />
+
+    <!-- Controls -->
+    <div class="controls">
+        <button data-filter="all">All</button>
+        <button data-filter="easy">Easy</button>
+        <button data-filter="medium">Medium</button>
+        <button data-filter="hard">Hard</button>
+        <button data-filter="quick">Quick</button>
+        <button data-filter="favorites">❤️ Favorites</button>
+
+        <button data-sort="name">A–Z</button>
+        <button data-sort="time">Fastest</button>
+    </div>
+
+    <!-- Counter -->
+    <p id="counter"></p>
+
+    <!-- Recipes -->
+    <div id="recipe-container"></div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
+<!---COMMENT>
